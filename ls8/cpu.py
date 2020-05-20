@@ -25,18 +25,6 @@ class CPU:
 
         address = 0
 
-        # For now, we've just hardcoded a program:
-
-        # program = [
-        #     # From print8.ls8
-        #     0b10000010, # LDI R0,8
-        #     0b00000000, # LDI expects reg in pc+1
-        #     0b00001000, # LDI expects reg in pc+2
-        #     0b01000111, # PRN R0
-        #     0b00000000, # PRN expects a reg in next pc
-        #     0b00000001, # HLT
-        # ]
-
         self.pc = address
 
         for instruction in program:
@@ -53,7 +41,11 @@ class CPU:
         elif op == "SUB":
             self.reg[reg_a] -= self.reg[reg_b]
         elif op == 'MULT':
-            self.reg[reg_a] *= self.reg[reg_b]
+            multiple = int(self.reg[reg_a], 2) * int(self.reg[reg_b], 2)
+            binary = bin(multiple).replace('0b', '')
+            while len(binary) < 8:
+                binary = '0' + binary
+            self.reg[reg_a] = binary
         else:
             raise Exception("Unsupported ALU operation")
     
@@ -84,23 +76,37 @@ class CPU:
 
         print()
 
-    def run(self):
+    def run(self, param1=None, param2=None):
+        cur_param = param1
         """Run the CPU."""
         while True:
 # LDI expects 2 params(regIndex, value)
             if self.ram[self.pc] == 0b10000010: # LDI
                 ldi_param_reg = self.ram[self.pc + 1]
-                ldi_param_val = self.ram[self.pc + 2]
+                ldi_param_val = bin(int(cur_param)).replace('0b', '0000') # How do I detect that param1 has already been stored? 
+                if cur_param == param1:
+                    cur_param = param2
 
                 self.reg[ldi_param_reg] = ldi_param_val
 
-                self.pc += 3
+                self.pc += 2
+                # self.trace()
             
             if self.ram[self.pc] == 0b01000111: # PRN
                 prn_param_reg = self.ram[self.pc + 1]
-                print(self.reg[prn_param_reg])
+                print(int(self.reg[prn_param_reg], 2))
 
                 self.pc += 2
+
+            if self.ram[self.pc] == 0b10100010: # MULT
+                reg_a = self.ram[self.pc + 1]
+                reg_b = self.ram[self.pc + 2]
+                self.alu('MULT', reg_a, reg_b)
+
+                # print(reg_a)
+
+                self.pc += 3
 # HLT
             if self.ram[self.pc] == 0b00000001:
+                # self.pc = 0
                 break

@@ -39,10 +39,9 @@ if __name__ == "__main__":
 
     cpu = CPU() # I create a cpu class
 #sys.argv[0] == main file
-
-    print(type(sys.argv[1]))
 #sys.argv[1] == program to run
 #sys.argv[2] == first param
 #sys.argv[3] == second param
     cpu.load(programs[sys.argv[1]]) # I call the .load() method
-    cpu.run() # I call the .run() method, this should run some sort of protocol until a halt command is received
+    if len(sys.argv) == 3: cpu.run(sys.argv[2])
+    if len(sys.argv) == 4: cpu.run(sys.argv[2], sys.argv[3])
