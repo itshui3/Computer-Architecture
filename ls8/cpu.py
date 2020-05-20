@@ -20,22 +20,22 @@ class CPU:
         self.ram = [0] * 256
         self.pc = 0
 
-    def load(self):
+    def load(self, program=[]):
         """Load a program into memory."""
 
         address = 0
 
         # For now, we've just hardcoded a program:
 
-        program = [
-            # From print8.ls8
-            0b10000010, # LDI R0,8
-            0b00000000, # LDI expects reg in pc+1
-            0b00001000, # LDI expects reg in pc+2
-            0b01000111, # PRN R0
-            0b00000000, # PRN expects a reg in next pc
-            0b00000001, # HLT
-        ]
+        # program = [
+        #     # From print8.ls8
+        #     0b10000010, # LDI R0,8
+        #     0b00000000, # LDI expects reg in pc+1
+        #     0b00001000, # LDI expects reg in pc+2
+        #     0b01000111, # PRN R0
+        #     0b00000000, # PRN expects a reg in next pc
+        #     0b00000001, # HLT
+        # ]
 
         self.pc = address
 
