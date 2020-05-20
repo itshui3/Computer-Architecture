@@ -75,22 +75,22 @@ class CPU:
             print(" %02X" % self.reg[i], end='')
 
         print()
-
-    def run(self, param1=None, param2=None):
-        cur_param = param1
+    def run(self, params=[]):
+    # def run(self, param1=None, param2=None):
+        par_c = 0
+        # cur_param = param1
         """Run the CPU."""
         while True:
 # LDI expects 2 params(regIndex, value)
             if self.ram[self.pc] == 0b10000010: # LDI
                 ldi_param_reg = self.ram[self.pc + 1]
-                ldi_param_val = bin(int(cur_param)).replace('0b', '0000') # How do I detect that param1 has already been stored? 
-                if cur_param == param1:
-                    cur_param = param2
+                ldi_param_val = bin(int(params[par_c])).replace('0b', '0000')
+
+                par_c += 1
 
                 self.reg[ldi_param_reg] = ldi_param_val
 
                 self.pc += 2
-                # self.trace()
             
             if self.ram[self.pc] == 0b01000111: # PRN
                 prn_param_reg = self.ram[self.pc + 1]

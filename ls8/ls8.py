@@ -38,10 +38,9 @@ if __name__ == "__main__":
     from cpu import *
 
     cpu = CPU() # I create a cpu class
-#sys.argv[0] == main file
-#sys.argv[1] == program to run
-#sys.argv[2] == first param
-#sys.argv[3] == second param
+
     cpu.load(programs[sys.argv[1]]) # I call the .load() method
-    if len(sys.argv) == 3: cpu.run(sys.argv[2])
-    if len(sys.argv) == 4: cpu.run(sys.argv[2], sys.argv[3])
+    params = []
+    if len(sys.argv) > 2: params = sys.argv[2:]
+
+    cpu.run(params)
