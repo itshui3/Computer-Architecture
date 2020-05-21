@@ -38,14 +38,24 @@ class CPU:
         """ALU operations."""
 
         if op == "ADD":
-            self.reg[reg_a] += self.reg[reg_b]
+            a = int(self.reg[reg_a], 2)
+            b = int(self.reg[reg_b], 2)
+            # print(bin(a * b))
+            summation = a + b
+            binary = bin(summation)
+            # while len(binary) < 8:
+            #     binary = '0' + binary
+            self.reg[reg_a] = binary
         elif op == "SUB":
             self.reg[reg_a] -= self.reg[reg_b]
         elif op == 'MULT':
-            multiple = self.reg[reg_a] * self.reg[reg_b]
-            binary = bin(multiple).replace('0b', '')
-            while len(binary) < 8:
-                binary = '0' + binary
+            a = int(self.reg[reg_a], 2)
+            b = int(self.reg[reg_b], 2)
+            # print(bin(a * b))
+            multiple = a * b
+            binary = bin(multiple)
+            # while len(binary) < 8:
+            #     binary = '0' + binary
             self.reg[reg_a] = binary
         else:
             raise Exception("Unsupported ALU operation")
@@ -87,14 +97,19 @@ class CPU:
             if self.ram[self.pc] == 0b10000010: # LDI
                 ldi_param_reg = self.ram[self.pc + 1]
                 ldi_param_val = self.ram[self.pc + 2]
+
+                # P8 - decimal 8
+                # Mult - also dec 8 & 9
                 self.reg[ldi_param_reg] = bin(ldi_param_val)
                 self.pc += 3
             
             if self.ram[self.pc] == 0b01000111: # PRN
                 prn_param_reg = self.ram[self.pc + 1]
+                # Check for different types and convert to bin
+                # Store everything the same way
+                # Store things in forms dependent on what I want to do 
                 # print(self.reg[prn_param_reg])
                 print(int(self.reg[prn_param_reg], 2))
-
                 self.pc += 2
 
             if self.ram[self.pc] == 0b10100000: # ADD
@@ -111,19 +126,31 @@ class CPU:
 
             if self.ram[self.pc] == 0b01000101:    # PUSH
                 self.sp -= 1
-
-                # Grab value from registers[?] and place it in ram slot
                 self.ram[self.sp] = self.reg[self.ram[self.pc + 1]]
-
                 self.pc += 2
 
             if self.ram[self.pc] == 0b01000110:   # POP
                 self.reg[self.ram[self.pc + 1]] = self.ram[self.sp]
                 self.sp += 1
-
                 self.pc += 2
+            
+            if self.ram[self.pc] == 0b01010000: # CALL
+                # PC + 1 within ram memory is the register
+                regIndex = self.ram[self.pc + 1]
+                fnIndex = self.reg[regIndex].replace('0b', '')
+                # That holds the value of the ram index
+                # Which is where the function call begins
 
+                # PUSH bookmark onto stack
+                self.sp -= 1
+                self.ram[self.sp] = self.pc + 2
+                self.pc = int(fnIndex, 2)
+
+            if self.ram[self.pc] == 0b00010001: # RET
+                self.pc = self.ram[self.sp] # RET
+                self.sp += 1
 # HLT
             if self.ram[self.pc] == 0b00000001:
-                # self.pc = 0
                 break
+
+            # print('No command recognized')
