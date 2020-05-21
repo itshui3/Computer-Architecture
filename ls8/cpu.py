@@ -17,7 +17,8 @@ class CPU:
     def __init__(self):
         """Construct a new CPU."""
         self.reg = [0] * 8
-        self.ram = [0] * 256
+        self.ram = [0] * 0xFF
+        self.sp = 0xF4 # Start of the stack
         self.pc = 0
 
     def load(self, program=[]):
@@ -41,7 +42,7 @@ class CPU:
         elif op == "SUB":
             self.reg[reg_a] -= self.reg[reg_b]
         elif op == 'MULT':
-            multiple = int(self.reg[reg_a], 2) * int(self.reg[reg_b], 2)
+            multiple = self.reg[reg_a] * self.reg[reg_b]
             binary = bin(multiple).replace('0b', '')
             while len(binary) < 8:
                 binary = '0' + binary
@@ -75,37 +76,53 @@ class CPU:
             print(" %02X" % self.reg[i], end='')
 
         print()
-    def run(self, params=[]):
+    def run(self):
     # def run(self, param1=None, param2=None):
-        par_c = 0
+
         # cur_param = param1
         """Run the CPU."""
         while True:
 # LDI expects 2 params(regIndex, value)
+
             if self.ram[self.pc] == 0b10000010: # LDI
                 ldi_param_reg = self.ram[self.pc + 1]
-                ldi_param_val = bin(int(params[par_c])).replace('0b', '0000')
-
-                par_c += 1
-
-                self.reg[ldi_param_reg] = ldi_param_val
-
-                self.pc += 2
+                ldi_param_val = self.ram[self.pc + 2]
+                self.reg[ldi_param_reg] = bin(ldi_param_val)
+                self.pc += 3
             
             if self.ram[self.pc] == 0b01000111: # PRN
                 prn_param_reg = self.ram[self.pc + 1]
+                # print(self.reg[prn_param_reg])
                 print(int(self.reg[prn_param_reg], 2))
 
                 self.pc += 2
+
+            if self.ram[self.pc] == 0b10100000: # ADD
+                reg_a = self.ram[self.pc + 1]
+                reg_b = self.ram[self.pc + 2]
+                self.alu('ADD', reg_a, reg_b)
+                self.pc += 3
 
             if self.ram[self.pc] == 0b10100010: # MULT
                 reg_a = self.ram[self.pc + 1]
                 reg_b = self.ram[self.pc + 2]
                 self.alu('MULT', reg_a, reg_b)
-
-                # print(reg_a)
-
                 self.pc += 3
+
+            if self.ram[self.pc] == 0b01000101:    # PUSH
+                self.sp -= 1
+
+                # Grab value from registers[?] and place it in ram slot
+                self.ram[self.sp] = self.reg[self.ram[self.pc + 1]]
+
+                self.pc += 2
+
+            if self.ram[self.pc] == 0b01000110:   # POP
+                self.reg[self.ram[self.pc + 1]] = self.ram[self.sp]
+                self.sp += 1
+
+                self.pc += 2
+
 # HLT
             if self.ram[self.pc] == 0b00000001:
                 # self.pc = 0
