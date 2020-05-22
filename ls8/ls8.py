@@ -9,7 +9,8 @@ programs = {
     'print8': [],
     'mult': [],
     'stack': [],
-    'call': []
+    'call': [],
+    'sprint': []
 }
 
 with open(os.path.abspath("ls8/print8.ls8"), 'r') as program:
@@ -54,6 +55,19 @@ with open(os.path.abspath("ls8/call.ls8"), 'r') as program:
                 byte = byte + c
         if len(byte) > 0:
             programs['call'].append(int(byte, 2))
+
+with open(os.path.abspath("ls8/sprint.ls8"), 'r') as program:
+    for p in program:
+        byte = ''
+        for c in p:
+            if c != str(1) and c != str(0):
+                break
+            else:
+                byte = byte + c
+        if len(byte) > 0:
+            programs['call'].append(int(byte, 2))
+
+print(programs['sprint'])
 
 """Main."""
 if __name__ == "__main__":

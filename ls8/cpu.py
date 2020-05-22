@@ -40,22 +40,20 @@ class CPU:
         if op == "ADD":
             a = int(self.reg[reg_a], 2)
             b = int(self.reg[reg_b], 2)
-            # print(bin(a * b))
+
             summation = a + b
             binary = bin(summation)
-            # while len(binary) < 8:
-            #     binary = '0' + binary
+
             self.reg[reg_a] = binary
         elif op == "SUB":
             self.reg[reg_a] -= self.reg[reg_b]
         elif op == 'MULT':
             a = int(self.reg[reg_a], 2)
             b = int(self.reg[reg_b], 2)
-            # print(bin(a * b))
+
             multiple = a * b
             binary = bin(multiple)
-            # while len(binary) < 8:
-            #     binary = '0' + binary
+
             self.reg[reg_a] = binary
         else:
             raise Exception("Unsupported ALU operation")
@@ -152,5 +150,29 @@ class CPU:
 # HLT
             if self.ram[self.pc] == 0b00000001:
                 break
+
+            if self.ram[self.pc] == 0b10100111: # CMP
+                reg_a = self.ram[self.pc + 1]
+                reg_b = self.ram[self.pc + 2]
+
+                if self.reg[reg_a] == self.reg[reg_b]:
+                    #set Equal to 1 in LGE, otherwise set to 0
+                    print('reg a equal', self.reg[reg_a])
+                    print('reg b equal', self.reg[reg_b])
+                    pass
+                
+                if self.reg[reg_a] < self.reg[reg_b]:
+                    #set Less-than to 1 in LGE, otherwise set to 0
+                    print('reg a less-than', self.reg[reg_a])
+                    print('reg b less-than', self.reg[reg_b])
+                    pass
+
+                if self.reg[reg_a] > self.reg[reg_b]:
+                    # set Greater-than to 1 in LGE, otherwise set to 0
+                    print('reg a greater-than', self.reg[reg_a])
+                    print('reg b greater-than', self.reg[reg_b])
+                    pass
+
+                self.pc += 3
 
             # print('No command recognized')
