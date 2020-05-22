@@ -20,6 +20,7 @@ class CPU:
         self.ram = [0] * 0xFF
         self.sp = 0xF4 # Start of the stack
         self.pc = 0
+        self.fl = 0b00000000
 
     def load(self, program=[]):
         """Load a program into memory."""
@@ -159,19 +160,22 @@ class CPU:
                     #set Equal to 1 in LGE, otherwise set to 0
                     print('reg a equal', self.reg[reg_a])
                     print('reg b equal', self.reg[reg_b])
-                    pass
+                    self.fl = 0b00000001
+                    print(self.fl)
                 
                 if self.reg[reg_a] < self.reg[reg_b]:
                     #set Less-than to 1 in LGE, otherwise set to 0
                     print('reg a less-than', self.reg[reg_a])
                     print('reg b less-than', self.reg[reg_b])
-                    pass
+                    self.fl = 0b00000100
+                    print(self.fl)
 
                 if self.reg[reg_a] > self.reg[reg_b]:
                     # set Greater-than to 1 in LGE, otherwise set to 0
                     print('reg a greater-than', self.reg[reg_a])
                     print('reg b greater-than', self.reg[reg_b])
-                    pass
+                    self.fl = 0b00000010
+                    print(self.fl)
 
                 self.pc += 3
 

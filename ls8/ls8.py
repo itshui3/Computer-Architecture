@@ -65,9 +65,8 @@ with open(os.path.abspath("ls8/sprint.ls8"), 'r') as program:
             else:
                 byte = byte + c
         if len(byte) > 0:
-            programs['call'].append(int(byte, 2))
+            programs['sprint'].append(int(byte, 2))
 
-print(programs['sprint'])
 
 """Main."""
 if __name__ == "__main__":
