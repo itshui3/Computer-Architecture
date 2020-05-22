@@ -195,5 +195,9 @@ class CPU:
 
                 else:
                     self.pc += 2
+            
+            if self.ram[self.pc] == 0b01010100: # JMP
+                toReg = self.ram[self.pc + 1]
+                self.pc = int(self.reg[toReg], 2)
 
             # print('No command recognized')
