@@ -158,25 +158,42 @@ class CPU:
 
                 if self.reg[reg_a] == self.reg[reg_b]:
                     #set Equal to 1 in LGE, otherwise set to 0
-                    print('reg a equal', self.reg[reg_a])
-                    print('reg b equal', self.reg[reg_b])
+                    # print('reg a equal', self.reg[reg_a])
+                    # print('reg b equal', self.reg[reg_b])
                     self.fl = 0b00000001
-                    print(self.fl)
+                    # print(self.fl)
                 
                 if self.reg[reg_a] < self.reg[reg_b]:
                     #set Less-than to 1 in LGE, otherwise set to 0
-                    print('reg a less-than', self.reg[reg_a])
-                    print('reg b less-than', self.reg[reg_b])
+                    # print('reg a less-than', self.reg[reg_a])
+                    # print('reg b less-than', self.reg[reg_b])
                     self.fl = 0b00000100
-                    print(self.fl)
+                    # print(self.fl)
 
                 if self.reg[reg_a] > self.reg[reg_b]:
                     # set Greater-than to 1 in LGE, otherwise set to 0
-                    print('reg a greater-than', self.reg[reg_a])
-                    print('reg b greater-than', self.reg[reg_b])
+                    # print('reg a greater-than', self.reg[reg_a])
+                    # print('reg b greater-than', self.reg[reg_b])
                     self.fl = 0b00000010
-                    print(self.fl)
+                    # print(self.fl)
 
                 self.pc += 3
+            
+            if self.ram[self.pc] == 0b01010101: # JEQ
+                toReg = self.ram[self.pc + 1]
+                if self.fl == 0b00000001:
+                    self.pc = int(self.reg[toReg], 2)
+
+                else:
+                    self.pc += 2
+            
+            if self.ram[self.pc] == 0b01010110: # JNE
+                toReg = self.ram[self.pc + 1]
+                # if equal flag is false jump to address in reg^
+                if self.fl % 2 == 0:
+                    self.pc = int(self.reg[toReg], 2)
+
+                else:
+                    self.pc += 2
 
             # print('No command recognized')
