@@ -10,7 +10,9 @@ programs = {
     'mult': [],
     'stack': [],
     'call': [],
-    'sprint': []
+    'sprint': [],
+    'andoperation': [],
+    'oroperation': []
 }
 
 with open(os.path.abspath("ls8/print8.ls8"), 'r') as program:
@@ -67,6 +69,27 @@ with open(os.path.abspath("ls8/sprint.ls8"), 'r') as program:
         if len(byte) > 0:
             programs['sprint'].append(int(byte, 2))
 
+with open(os.path.abspath("ls8/andoperation.ls8"), 'r') as program:
+    for p in program:
+        byte = ''
+        for c in p:
+            if c != str(1) and c != str(0):
+                break
+            else:
+                byte = byte + c
+        if len(byte) > 0:
+            programs['andoperation'].append(int(byte, 2))
+
+with open(os.path.abspath("ls8/oroperation.ls8"), 'r') as program:
+    for p in program:
+        byte = ''
+        for c in p:
+            if c != str(1) and c != str(0):
+                break
+            else:
+                byte = byte + c
+        if len(byte) > 0:
+            programs['oroperation'].append(int(byte, 2))
 
 """Main."""
 if __name__ == "__main__":

@@ -200,4 +200,50 @@ class CPU:
                 toReg = self.ram[self.pc + 1]
                 self.pc = int(self.reg[toReg], 2)
 
+            if self.ram[self.pc] == 0b10101000: # AND
+                # Take reg_a AND with reg_b bitwise
+                reg_a = self.ram[self.pc + 1]
+                reg_b = self.ram[self.pc + 2]
+
+                binA = self.reg[reg_a].replace('0b', '')
+                binB = self.reg[reg_b].replace('0b', '')
+                # after operation, add 0b and bin(int(x, 2)) it
+
+                while len(binA) < 8:
+                    binA = '0' + binA
+                while len(binB) < 8:
+                    binB = '0' + binB
+
+                andBin = ''
+                for i in range(8):
+                    if binA[i] == binB[i] and binA[i] == '1':
+                        andBin += '1'
+                    else:
+                        andBin += '0'
+                
+                self.reg[reg_a] = bin(int('0b' + andBin, 2))
+                self.pc += 3
+
+            if self.ram[self.pc] == 0b10101010: # OR
+                # Take reg_a OR with reg_b bitwise
+                reg_a = self.ram[self.pc + 1]
+                reg_b = self.ram[self.pc + 2]
+                binA = self.reg[reg_a].replace('0b', '')
+                binB = self.reg[reg_b].replace('0b', '')
+
+                while len(binA) < 8:
+                    binA = '0' + binA
+                while len(binB) < 8:
+                    binB = '0' + binB
+
+                orBin = ''
+                for i in range(8):
+                    if binA[i] == '1' or binB[i] == '1':
+                        orBin += '1'
+                    else:
+                        orBin += '0'
+
+                self.reg[reg_a] = bin(int('0b' + orBin, 2))
+                self.pc += 3
+
             # print('No command recognized')
